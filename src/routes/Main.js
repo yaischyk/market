@@ -33,7 +33,7 @@ function Main () {
                 <div key={index}>
                     {data === "Load" ? 
                         "Загрузка данных..." : 
-                        <Link to={`/logs/l/${data}`}>{getDate(new Date(data))}</Link>
+                        <Link className="font-monospace" to={`/logs/${data}`}>{getDate(new Date(data))}</Link>
                     }
                     <br/>
                 </div>

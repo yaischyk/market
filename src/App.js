@@ -5,13 +5,15 @@ import './App.css';
 import Main from "./routes/Main";
 import Task from "./routes/Task";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 function App() {
   return (
     <div className="App">
         <BrowserRouter>
             <Routes>
-            <Route path="/logs/:key" element={<Main/>} />
-            <Route path="/logs/l/:id" element={<Task/>} />
+            <Route path="/:key" element={<Main/>} />
+            <Route path="/logs/:id" element={<Task/>} />
             </Routes>
         </BrowserRouter>
     </div>

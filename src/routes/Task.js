@@ -3,80 +3,79 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 function Task () {
-    const [logs, setLogs] = useState([]);
+    const [logsNoFound, setLogsNoFound] = useState([]);
+    const [logsFNP, setLogsFNP] = useState([]);
+    const [logsNoData, setLogsNoData] = useState([]);
+    const [logsPlaced, setLogsPlaced] = useState([]);
 
     const SERVER = "https://app-uj28.onrender.com";
     const { id } = useParams();
 
     useEffect(() => {
         // Get Logs
-        axios.get(SERVER + "/logs/get?task_id="+id)
+        axios.get(SERVER + "/logs/get?task_id="+id+"&status=not_found")
         .then((response) => {
-            setLogs(response["data"]);
+            setLogsNoFound(response["data"]);
+        });
+
+        axios.get(SERVER + "/logs/get?task_id="+id+"&status=found_not_placed")
+        .then((response) => {
+            setLogsFNP(response["data"]);
+        });
+
+        axios.get(SERVER + "/logs/get?task_id="+id+"&status=no_data")
+        .then((response) => {
+            setLogsNoData(response["data"]);
+        });
+
+        axios.get(SERVER + "/logs/get?task_id="+id+"&status=placed")
+        .then((response) => {
+            setLogsPlaced(response["data"]);
         });
     }, []);
-
     return (
         <div>
-            <div>Не найдены на это время:</div>
-            {logs.map((data, index) =>
-                <div key={index}>
-                    {data["status"] === "not_found" ?
-                        <td>
-                            <tr>{data["link"]}</tr>
-                        </td>
-                        : <div></div>
-                    }
-                </div>
+            <div className="font-monospace title">Не найдены на это время:</div>
+            <table className="w-50 table table-bordered"><tbody>
+            {logsNoFound.map((data, index) =>
+                <tr>
+                    <td>{data["link"]}</td>
+                </tr>
             )}
+            </tbody></table>
 
-            <br/><br/>
+            <br/>
 
-            <div>Отсутствует информация по этим сообществам.</div>
-            <table><tbody>
-                {logs.map((data, index) =>
-                    <div key={index}>
-                        {data["status"] === "no_data" ?
-                            <td>
-                                <tr>{data["link"]}</tr>
-                            </td>
-                            : <div></div>
-                        }
-                    </div>
+            <div className="font-monospace title">Отсутствует информация по этим сообществам.</div>
+            <table className="w-50 table table-bordered"><tbody>
+                {logsNoData.map((data, index) =>
+                    <tr>
+                        <td>{data["link"]}</td>
+                    </tr>
                 )}
             </tbody></table>
 
-            <br/><br/>
+            <br/>
 
-            <div>Нашёл сообщество, но не удалось разместить</div>
-            <table><tbody>
-                {logs.map((data, index) =>
-                    <div key={index}>
-                        {data["status"] === "found_not_placed" ?
-                            <tr>
-                                <td>{data["link"]}</td>
-                                <td>{data["answer"]}</td>
-                            </tr>
-                            : <div></div>
-                        }
-                    </div>
+            <div className="font-monospace title">Нашёл сообщество, но не удалось разместить.</div>
+            <table className="table table-bordered"><tbody>
+                {logsFNP.map((data, index) =>
+                    <tr>
+                        <td>{data["link"]}</td>
+                        <td>{data["answer"]}</td>
+                    </tr>
                 )}
             </tbody></table>
 
-            <br/><br/>
+            <br/>
 
-            <div>Удалось разместить рекламу</div>
-            <table><tbody>
-                {logs.map((data, index) =>
-                    <div key={index}>
-                        {data["status"] === "placed" ?
-                            <td>
-                                <tr>{data["link"]}</tr>
-                                <tr>{data["answer"]}</tr>
-                            </td>
-                            : <div></div>
-                        }
-                    </div>
+            <div className="font-monospace title">Удалось разместить рекламу.</div>
+            <table className="w-50 table table-bordered"><tbody>
+                {logsPlaced.map((data, index) =>
+                    <tr>
+                        <td>{data["link"]}</td>
+                        <td>{data["answer"]}</td>
+                    </tr>
                 )}
             </tbody></table>
         </div>
